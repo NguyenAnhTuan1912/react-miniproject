@@ -19,18 +19,20 @@ export class TaskAPI implements APIMethods {
   }
 
   async getMultiplyAsync(userId: string | number): Promise<Array<JSONPlaceholder_TaskData>> {
-    const response = await fetch(this.base + `/${userId}` + TaskAPI.PATHS.todos);
+    const response = await fetch(this.base + `/users/${userId}` + TaskAPI.PATHS.todos);
     const users = await response.json() as Array<JSONPlaceholder_TaskData>;
     return users;
   }
 
-  async updateAsync(taskId: string | number, state: boolean): Promise<unknown> {
+  async updateAsync(taskId: string | number, state: boolean): Promise<JSONPlaceholder_TaskData> {
     const response = await fetch(this.base + TaskAPI.PATHS.todos + `/${taskId}`, {
       method: "PATCH",
       body: JSON.stringify({
         completed: state
       })
     });
-    return response.json();
+    const result = await response.json();
+    (result as JSONPlaceholder_TaskData).completed = state;
+    return result;
   }
 }
