@@ -2,7 +2,7 @@
 import { ChangeStateFnType } from "src/hooks/useStateWESSFns";
 
 // Import locally
-import type { Option } from "./AppSelect.props";
+import type { Option } from "./types";
 
 export function getInitialState() {
   return {

@@ -1,14 +1,9 @@
-import { UserAPI } from "./user";
-import { TaskAPI } from "./task";
+import { UserAPI as _UserAPI_ } from "./user";
+import { TaskAPI as _TaskAPI_ } from "./task";
 
-export class JSONPlaceholderAPI {
+export class JSONPlaceholder {
   static BASE = "https://jsonplaceholder.typicode.com";
 
-  userAPI!: UserAPI;
-  taskAPI!: TaskAPI;
-
-  constructor() {
-    this.userAPI = new UserAPI(JSONPlaceholderAPI.BASE);
-    this.taskAPI = new TaskAPI(JSONPlaceholderAPI.BASE);
-  }
+  static UserAPI: _UserAPI_ = new _UserAPI_(JSONPlaceholder.BASE);
+  static TaskAPI: _TaskAPI_ = new _TaskAPI_(JSONPlaceholder.BASE);
 }

@@ -5,8 +5,26 @@ import { useStateWESSFns } from "src/hooks/useStateWESSFns";
 
 // Import locally
 import { getInitialState, buildStateFns } from "./state";
-import type { AppSelectProps, OptionProps, Option as OptionData } from "./AppSelect.props";
+import type { AppSelectProps, OptionProps, Option as OptionData } from "./types";
 
+function prepareOptions(data: Array<OptionData>): [Array<OptionData>, (OptionData | null)] {
+  const o = new Set(data);
+  const result = [] as Array<OptionData>;
+  let firstOption = null;
+
+  for(const opt of o.values()) {
+    if(!firstOption) firstOption = opt;
+    result.push(opt);
+  }
+
+  return [result, firstOption];
+}
+
+/**
+ * Use this functional component to render an `option` for `select` of app.
+ * @param props 
+ * @returns 
+ */
 function Option(props: OptionProps) {
   return (
     <button className="flex justify-start" onClick={() => props.onSelectOption()}>
@@ -25,23 +43,15 @@ export default function AppSelect(props: AppSelectProps) {
   const [state, setStateFns] = useStateWESSFns(getInitialState(), buildStateFns);
 
   const [options, firstOption] = React.useMemo(() => {
-    const o = new Set(props.data);
-    const result = [] as Array<OptionData>;
-    let firstOption = null;
-
-    for(const opt of o.values()) {
-      if(!firstOption) firstOption = opt;
-      result.push(opt);
-    }
-
-    return [result, firstOption];
+    return prepareOptions(props.data);
   }, [props.data.length]);
 
   React.useEffect(() => {
     setStateFns.setSelectedOption(firstOption!);
-  }, []);
+  }, [props.data.length]);
 
   React.useEffect(() => {
+    if(!state.selectedOption) return;
     props.onSelectOption(state.selectedOption);
   }, [state.selectedOption]);
 
